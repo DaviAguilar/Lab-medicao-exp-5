@@ -1,0 +1,17 @@
+{
+  "name": "graphql-vs-rest-experiment",
+  "version": "1.0.0",
+  "description": "Controlled experiment comparing GraphQL vs REST APIs",
+  "main": "index.js",
+  "scripts": {
+    "start:rest": "node rest-api/server.js",
+    "start:graphql": "node graphql-api/server.js",
+    "collect-data": "node experiments/collect-data.js",
+    "analyze": "node experiments/analyze-data.js",
+    "install-all": "npm install && cd rest-api && npm install && cd ../graphql-api && npm install && cd ../experiments && npm install"
+  },
+  "keywords": ["graphql", "rest", "experiment", "api"],
+  "author": "",
+  "license": "ISC"
+}
+
