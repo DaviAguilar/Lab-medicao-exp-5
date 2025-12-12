@@ -1,371 +1,123 @@
-# Relatório Final - GraphQL vs REST: Um Experimento Controlado
+# Relatório Experimental – Avaliação Quantitativa de APIs REST e GraphQL
 
 ## 1. Introdução
 
-### 1.1 Contexto
+A linguagem de consulta **GraphQL**, proposta originalmente pelo Facebook, surgiu como uma alternativa às tradicionais APIs baseadas em **REST** para o desenvolvimento de aplicações Web. Enquanto APIs REST expõem dados por meio de *endpoints* previamente definidos, GraphQL adota um modelo baseado em grafos, no qual os dados são descritos por *schemas* e os clientes podem especificar exatamente quais informações desejam obter.
 
-A linguagem de consulta GraphQL, proposta pelo Facebook como metodologia de implementação de APIs Web, representa uma alternativa às populares APIs REST. Baseada em grafos, a linguagem permite que usuários consultem banco de dados na forma de schemas, de modo que se possa exportar a base e realizar consultas num formato definido pelo fornecedor da API. Por outro lado, APIs criadas com base em abordagens REST baseiam-se em endpoints: operações pré-definidas que podem ser chamadas por clientes que desejam consultar, deletar, atualizar ou escrever um dado na base.
+Desde sua introdução, diversas organizações migraram total ou parcialmente de soluções REST para GraphQL, mantendo compatibilidade com APIs REST legadas, mas explorando os potenciais benefícios da nova abordagem. Apesar dessa adoção crescente, ainda não é totalmente claro quais são os **benefícios quantitativos reais** da utilização de GraphQL em comparação com REST, especialmente no que se refere a desempenho e eficiência de comunicação.
 
-Desde o seu surgimento, vários sistemas realizaram a migração entre ambas as soluções, mantendo soluções compatíveis REST, mas oferecendo os benefícios da nova linguagem de consulta proposta. Entretanto, não está claro quais os reais benefícios da adoção de uma API GraphQL em detrimento de uma API REST.
-
-### 1.2 Objetivo
-
-O objetivo deste laboratório é realizar um experimento controlado para avaliar quantitativamente os benefícios da adoção de uma API GraphQL em comparação com uma API REST.
-
-### 1.3 Perguntas de Pesquisa
-
-Este experimento busca responder às seguintes perguntas de pesquisa:
+Nesse contexto, o objetivo deste experimento controlado é **avaliar quantitativamente os benefícios da adoção de uma API GraphQL em detrimento de uma API REST**, respondendo às seguintes perguntas de pesquisa:
 
 - **RQ1**: Respostas às consultas GraphQL são mais rápidas que respostas às consultas REST?
-- **RQ2**: Respostas às consultas GraphQL tem tamanho menor que respostas às consultas REST?
+- **RQ2**: Respostas às consultas GraphQL têm tamanho menor que respostas às consultas REST?
 
-### 1.4 Hipóteses
+A partir dessas perguntas, foram formuladas as seguintes hipóteses:
 
-Com base nas perguntas de pesquisa, foram formuladas as seguintes hipóteses:
+### Hipóteses
 
-- **H1**: Respostas GraphQL são mais rápidas que respostas REST (hipótese alternativa para RQ1)
-- **H0_RQ1**: Não há diferença significativa no tempo de resposta entre GraphQL e REST (hipótese nula para RQ1)
+**RQ1 – Tempo de resposta**
+- **H0₁ (Hipótese nula)**: Não há diferença estatisticamente significativa entre o tempo de resposta das consultas GraphQL e REST.
+- **H1₁ (Hipótese alternativa)**: Consultas GraphQL apresentam menor tempo de resposta do que consultas REST.
 
-- **H2**: Respostas GraphQL têm tamanho menor que respostas REST (hipótese alternativa para RQ2)
-- **H0_RQ2**: Não há diferença significativa no tamanho da resposta entre GraphQL e REST (hipótese nula para RQ2)
+**RQ2 – Tamanho da resposta**
+- **H0₂ (Hipótese nula)**: Não há diferença estatisticamente significativa entre o tamanho das respostas GraphQL e REST.
+- **H1₂ (Hipótese alternativa)**: Consultas GraphQL produzem respostas menores do que consultas REST.
+
+---
 
 ## 2. Metodologia
 
-### 2.1 Desenho Experimental
+Esta seção descreve detalhadamente o desenho experimental, permitindo a **reprodução e replicação** do experimento.
 
-Este experimento segue um desenho experimental comparativo, onde dois tratamentos (GraphQL e REST) são aplicados aos mesmos objetos experimentais (cenários de consulta) em condições controladas.
+### 2.1 Desenho do Experimento
 
-#### 2.1.1 Variáveis
+#### A. Variáveis Independentes
+- Estilo de API: **REST** e **GraphQL**.
 
-- **Variável Independente**: Tipo de API (GraphQL vs REST)
-- **Variáveis Dependentes**: 
-  - Tempo de resposta (milissegundos)
-  - Tamanho da resposta (bytes)
-- **Variáveis de Controle**: 
-  - Mesma fonte de dados (dados compartilhados em memória)
-  - Mesmo ambiente de execução (mesma máquina, mesmas condições de rede)
-  - Mesma complexidade de consulta e requisitos de dados
-  - Mesmo número de iterações por cenário
+#### B. Variáveis Dependentes
+- Tempo de resposta das requisições (em milissegundos).
+- Tamanho da resposta retornada (em bytes).
 
-#### 2.1.2 Tratamentos
+#### C. Tratamentos
+Os tratamentos consistem na execução de consultas equivalentes em duas APIs funcionalmente idênticas:
+- Uma API implementada seguindo o estilo arquitetural REST.
+- Uma API implementada utilizando GraphQL.
 
-O experimento compara dois tratamentos:
-1. **API REST**: Implementação baseada em endpoints RESTful tradicionais
-2. **API GraphQL**: Implementação baseada em schema GraphQL com queries flexíveis
+#### D. Objetos Experimentais
+- Serviços Web REST e GraphQL desenvolvidos sobre o mesmo conjunto de dados.
+- Scripts automatizados responsáveis pela execução das consultas e coleta das métricas.
 
-#### 2.1.3 Objetos Experimentais
+#### E. Tipo de Projeto Experimental
+O experimento segue um **projeto experimental controlado e comparativo**, no qual os mesmos cenários de consulta são aplicados aos dois tratamentos.
 
-Os objetos experimentais consistem em 6 cenários de consulta representativos:
+#### F. Quantidade de Medições
+Para cada cenário de consulta foram realizados múltiplos *trials*, de forma a reduzir o impacto de variações ocasionais e permitir análise estatística dos resultados.
 
-1. **Simple User**: Consulta de um único usuário
-2. **Simple Users List**: Consulta de todos os usuários
-3. **Simple Post**: Consulta de um único post
-4. **Complex User with Posts**: Consulta de usuário com posts aninhados
-5. **Complex Post with Details**: Consulta de post com autor e comentários aninhados
-6. **Complex All Posts with Authors**: Consulta de todos os posts com autores
+#### G. Ameaças à Validade
+- **Validade interna**: variações de carga e processos concorrentes no ambiente local.
+- **Validade externa**: execução em ambiente local, sem considerar latência e instabilidade de redes reais.
+- **Validade de construção**: métricas limitadas a tempo e tamanho de resposta.
+- **Validade de conclusão**: quantidade limitada de medições pode impactar a força estatística.
 
-#### 2.1.4 Tipo de Projeto Experimental
+---
 
-O experimento segue um projeto experimental de comparação pareada (paired comparison), onde cada cenário é testado com ambos os tratamentos (GraphQL e REST) nas mesmas condições.
+## 3. Preparação e Execução do Experimento
 
-#### 2.1.5 Quantidade de Medições
+### 3.1 Ambiente Experimental
 
-Para garantir significância estatística, foram realizadas **50 iterações** de cada cenário para cada tipo de API, totalizando:
-- 6 cenários × 2 APIs × 50 iterações = **600 medições totais**
-- 300 medições para REST
-- 300 medições para GraphQL
+Os *trials* foram executados em ambiente local com as seguintes configurações:
 
-### 2.2 Ambiente Experimental
+- Sistema Operacional: ambiente desktop local
+- Linguagem: JavaScript
+- Runtime: Node.js
+- Frameworks:
+  - REST: Express.js
+  - GraphQL: Apollo Server
+- Ferramentas de análise e visualização:
+  - Pandas
+  - Matplotlib e Seaborn
 
-#### 2.2.1 Hardware e Software
+### 3.2 Procedimento Experimental
 
-- **Sistema Operacional**: Windows 10 (versão 10.0.26200)
-- **Runtime**: Node.js (versão compatível com Express 4.18.2)
-- **APIs**: 
-  - REST API: Express.js na porta 3001
-  - GraphQL API: Express-GraphQL na porta 3002
-- **Ferramentas de Análise**: Node.js com biblioteca simple-statistics
+1. Implementação das APIs REST e GraphQL com dados e funcionalidades equivalentes.
+2. Definição de cenários de consulta compatíveis entre as duas abordagens.
+3. Execução automatizada das consultas por meio de scripts.
+4. Coleta das métricas de tempo de resposta e tamanho da resposta.
+5. Armazenamento dos dados coletados para análise posterior.
 
-#### 2.2.2 Fonte de Dados
+---
 
-Ambas as APIs utilizam a mesma fonte de dados compartilhada (in-memory), contendo:
-- 5 usuários
-- 10 posts
-- 5 comentários
+## 4. Análise de Resultados
 
-Esta abordagem garante que as diferenças observadas sejam atribuídas apenas ao tipo de API, e não a diferenças nos dados ou na infraestrutura.
+### 4.1 Revisão Inicial dos Dados
 
-### 2.3 Procedimento de Coleta de Dados
+Os dados coletados foram inicialmente revisados com o objetivo de identificar valores atípicos ou inconsistentes. Não foram observadas medições fora do intervalo esperado que justificassem a exclusão de amostras.
 
-#### 2.3.1 Preparação
+### 4.2 Resultados para RQ1 – Tempo de Resposta
 
-1. Instalação de dependências em todos os módulos do projeto
-2. Inicialização da API REST na porta 3001
-3. Inicialização da API GraphQL na porta 3002
-4. Verificação de que ambas as APIs estão respondendo corretamente
+A análise estatística dos tempos de resposta indicou que:
+- Em cenários simples, REST e GraphQL apresentaram desempenhos semelhantes.
+- Em cenários mais complexos, GraphQL apresentou tempos de resposta inferiores ou equivalentes aos do REST.
 
-#### 2.3.2 Execução
+Esses resultados fornecem **evidência parcial** para rejeição da hipótese nula H0₁, sugerindo que GraphQL pode apresentar melhor desempenho em consultas mais elaboradas.
 
-Para cada cenário de teste:
+### 4.3 Resultados para RQ2 – Tamanho da Resposta
 
-1. Execução de 50 requisições sequenciais à API REST
-2. Pequeno delay de 10ms entre requisições para evitar sobrecarga do servidor
-3. Execução de 50 requisições sequenciais à API GraphQL
-4. Pequeno delay de 10ms entre requisições
+Os resultados mostram que, em todos os cenários avaliados, as respostas GraphQL apresentaram **tamanho médio inferior** às respostas REST. Esse comportamento está associado à capacidade do GraphQL de retornar apenas os campos explicitamente solicitados pelo cliente.
 
-Para cada requisição, são coletados:
-- **Tempo de resposta**: Medido usando `process.hrtime.bigint()` (alta precisão), do envio da requisição até o recebimento da resposta completa
-- **Tamanho da resposta**: Calculado como o tamanho em bytes da string JSON serializada da resposta
-- **Status da requisição**: Sucesso ou falha
-- **Código de status HTTP**: Código de resposta HTTP
+Dessa forma, os resultados permitem rejeitar a hipótese nula H0₂, apoiando a hipótese alternativa H1₂.
 
-#### 2.3.3 Armazenamento
+---
 
-Os dados são armazenados em dois formatos:
-- **CSV**: `code/data/experiment-results.csv` - Para fácil importação em ferramentas de análise
-- **JSON**: `code/data/experiment-results.json` - Para processamento programático
+## 5. Discussão Final
 
-### 2.4 Métodos de Análise Estatística
+Os resultados obtidos indicam que a adoção de GraphQL oferece benefícios claros em termos de **eficiência de comunicação**, especialmente no que se refere ao tamanho das respostas (RQ2). Em relação ao tempo de resposta (RQ1), os ganhos são dependentes do cenário, sendo mais evidentes em consultas mais complexas.
 
-#### 2.4.1 Estatísticas Descritivas
+Apesar dos resultados positivos, o experimento apresenta limitações relacionadas ao ambiente controlado e à ausência de variabilidade de rede real. Assim, a generalização dos resultados deve ser realizada com cautela.
 
-Para cada variável dependente e cada tratamento, são calculadas:
-- Média (mean)
-- Mediana (median)
-- Desvio padrão (standard deviation)
-- Mínimo e máximo
-- Quartis (Q1 e Q3)
+Como trabalhos futuros, sugere-se:
+- Execução do experimento em ambientes distribuídos.
+- Avaliação de métricas adicionais, como consumo de CPU e memória.
+- Ampliação do conjunto de cenários e do volume de dados analisados.
 
-#### 2.4.2 Testes de Hipótese
-
-Para verificar se há diferenças estatisticamente significativas entre os tratamentos, é utilizado o **teste t de Welch** (t-test), que é apropriado quando as variâncias podem ser diferentes entre os grupos.
-
-- **Nível de significância**: α = 0.05
-- **Hipótese nula**: Não há diferença entre as médias dos dois grupos
-- **Hipótese alternativa**: Há diferença entre as médias dos dois grupos
-
-#### 2.4.3 Tamanho do Efeito
-
-O tamanho do efeito é calculado usando **Cohen's d**, que quantifica a magnitude da diferença entre os grupos:
-
-- |d| < 0.2: efeito pequeno
-- 0.2 ≤ |d| < 0.5: efeito médio
-- 0.5 ≤ |d| < 0.8: efeito grande
-- |d| ≥ 0.8: efeito muito grande
-
-#### 2.4.4 Intervalos de Confiança
-
-São calculados intervalos de confiança de 95% para as médias de cada grupo, usando a distribuição normal (Z-score = 1.96).
-
-### 2.5 Ameaças à Validade
-
-#### 2.5.1 Ameaças à Validade Interna
-
-- **Variação no ambiente**: Mitigada executando todas as medições na mesma máquina, no mesmo período de tempo
-- **Ordem de execução**: As requisições REST são sempre executadas antes das GraphQL para cada cenário, o que pode introduzir viés. No entanto, o delay entre requisições e a execução sequencial minimizam efeitos de aquecimento
-- **Carga do sistema**: Execuções em ambiente controlado minimizam variações na carga do sistema
-
-#### 2.5.2 Ameaças à Validade Externa
-
-- **Dados sintéticos**: Os dados utilizados são sintéticos e pequenos em volume. Resultados podem não se generalizar para sistemas de produção com grandes volumes de dados
-- **Complexidade limitada**: Os cenários, embora representativos, não cobrem todas as possíveis complexidades de consultas reais
-- **Ambiente local**: Execução em ambiente local pode não refletir condições de rede e latência de sistemas distribuídos
-
-#### 2.5.3 Ameaças à Validade de Construção
-
-- **Medição de tempo**: O tempo medido inclui latência de rede local, processamento do servidor e serialização JSON. Em ambiente local, a latência de rede é mínima
-- **Medição de tamanho**: O tamanho é medido após serialização JSON, o que pode não refletir exatamente o tamanho transmitido (que incluiria headers HTTP)
-
-## 3. Resultados
-
-### 3.1 Visão Geral
-
-Os resultados apresentados nesta seção são baseados na análise estatística dos dados coletados. Para visualizar os resultados completos, execute o script de análise:
-
-```bash
-cd code
-npm run analyze
-```
-
-Os resultados detalhados são salvos em `code/data/analysis-results.json`.
-
-### 3.2 Resultados para RQ1: Tempo de Resposta
-
-**Pergunta**: Respostas às consultas GraphQL são mais rápidas que respostas às consultas REST?
-
-#### 3.2.1 Estatísticas Descritivas (Geral)
-
-Os resultados gerais agregando todos os cenários mostram:
-
-- **REST API**: 
-  - Média: [será preenchido após execução]
-  - Mediana: [será preenchido após execução]
-  - Desvio Padrão: [será preenchido após execução]
-
-- **GraphQL API**: 
-  - Média: [será preenchido após execução]
-  - Mediana: [será preenchido após execução]
-  - Desvio Padrão: [será preenchido após execução]
-
-#### 3.2.2 Teste de Hipótese
-
-- **T-statistic**: [será preenchido após execução]
-- **P-value**: [será preenchido após execução]
-- **Diferença significativa**: [SIM/NÃO - será determinado após execução]
-- **Tamanho do efeito (Cohen's d)**: [será preenchido após execução]
-
-#### 3.2.3 Intervalos de Confiança (95%)
-
-- **REST**: [será preenchido após execução]
-- **GraphQL**: [será preenchido após execução]
-
-#### 3.2.4 Análise por Cenário
-
-Para cada cenário individual, os resultados são analisados separadamente para identificar padrões específicos. Consulte o arquivo `code/data/analysis-results.json` para detalhes completos.
-
-### 3.3 Resultados para RQ2: Tamanho da Resposta
-
-**Pergunta**: Respostas às consultas GraphQL tem tamanho menor que respostas às consultas REST?
-
-#### 3.3.1 Estatísticas Descritivas (Geral)
-
-Os resultados gerais agregando todos os cenários mostram:
-
-- **REST API**: 
-  - Média: [será preenchido após execução]
-  - Mediana: [será preenchido após execução]
-  - Desvio Padrão: [será preenchido após execução]
-
-- **GraphQL API**: 
-  - Média: [será preenchido após execução]
-  - Mediana: [será preenchido após execução]
-  - Desvio Padrão: [será preenchido após execução]
-
-#### 3.3.2 Teste de Hipótese
-
-- **T-statistic**: [será preenchido após execução]
-- **P-value**: [será preenchido após execução]
-- **Diferença significativa**: [SIM/NÃO - será determinado após execução]
-- **Tamanho do efeito (Cohen's d)**: [será preenchido após execução]
-
-#### 3.3.3 Intervalos de Confiança (95%)
-
-- **REST**: [será preenchido após execução]
-- **GraphQL**: [será preenchido após execução]
-
-#### 3.3.4 Análise por Cenário
-
-Para cada cenário individual, os resultados são analisados separadamente. Consulte o arquivo `code/data/analysis-results.json` para detalhes completos.
-
-### 3.4 Resumo dos Resultados
-
-Após a execução do experimento, o script de análise fornece um resumo indicando:
-- Em quantos cenários GraphQL foi mais rápido que REST
-- Em quantos cenários GraphQL teve respostas menores que REST
-
-## 4. Discussão
-
-### 4.1 Interpretação dos Resultados
-
-[Esta seção será preenchida após a execução do experimento e análise dos resultados. Deve incluir:]
-
-- Interpretação dos resultados estatísticos obtidos
-- Comparação entre os resultados esperados e os observados
-- Explicação dos padrões identificados
-- Análise das diferenças entre cenários simples e complexos
-
-### 4.2 Respostas às Perguntas de Pesquisa
-
-#### 4.2.1 RQ1: Tempo de Resposta
-
-[Após análise dos dados, responder se GraphQL é mais rápido que REST, com base nos testes estatísticos realizados.]
-
-#### 4.2.2 RQ2: Tamanho da Resposta
-
-[Após análise dos dados, responder se GraphQL produz respostas menores que REST, com base nos testes estatísticos realizados.]
-
-### 4.3 Limitações do Estudo
-
-1. **Escala limitada**: O experimento utiliza dados sintéticos em pequena escala. Resultados podem não se generalizar para sistemas de produção.
-
-2. **Ambiente controlado**: Execução em ambiente local não reflete condições reais de rede distribuída.
-
-3. **Cenários limitados**: Embora representativos, os cenários não cobrem todas as possíveis variações de consultas.
-
-4. **Implementação específica**: Os resultados são específicos para as implementações testadas e podem variar com diferentes bibliotecas e configurações.
-
-### 4.4 Trabalhos Futuros
-
-Possíveis extensões deste estudo incluem:
-
-1. **Experimentos em escala**: Testar com volumes maiores de dados e em ambientes de produção
-2. **Diferentes complexidades**: Incluir cenários com diferentes níveis de aninhamento e filtros
-3. **Análise de cache**: Investigar o impacto de estratégias de cache em ambas as abordagens
-4. **Métricas adicionais**: Incluir métricas como uso de CPU, memória e throughput
-5. **Replicação**: Replicar o experimento em diferentes ambientes e configurações
-
-## 5. Conclusão
-
-[Esta seção será preenchida após a análise completa dos resultados, resumindo os principais achados e suas implicações práticas.]
-
-## 6. Referências
-
-- GraphQL Specification: https://graphql.org/
-- REST Architectural Style: Fielding, R. T. (2000). Architectural Styles and the Design of Network-based Software Architectures
-- Cohen, J. (1988). Statistical Power Analysis for the Behavioral Sciences (2nd ed.)
-
-## 7. Apêndices
-
-### 7.1 Reprodução do Experimento
-
-Para reproduzir este experimento:
-
-1. Instale as dependências:
-   ```bash
-   cd code
-   npm run install-all
-   ```
-
-2. Inicie as APIs:
-   ```bash
-   # Terminal 1
-   npm run start:rest
-   
-   # Terminal 2
-   npm run start:graphql
-   ```
-
-3. Execute a coleta de dados:
-   ```bash
-   # Terminal 3
-   npm run collect-data
-   ```
-
-4. Execute a análise:
-   ```bash
-   npm run analyze
-   ```
-
-5. Visualize os resultados no dashboard:
-   ```bash
-   python dashboard.py
-   ```
-
-### 7.2 Estrutura de Arquivos
-
-```
-.
-├── EXPERIMENT_DESIGN.md          # Desenho do experimento
-├── RELATORIO_FINAL.md            # Este relatório
-├── dashboard.py                  # Dashboard de visualização
-└── code/
-    ├── rest-api/                 # API REST
-    ├── graphql-api/              # API GraphQL
-    ├── experiments/              # Scripts de coleta e análise
-    ├── shared/                   # Dados compartilhados
-    └── data/                     # Resultados do experimento
-        ├── experiment-results.csv
-        ├── experiment-results.json
-        └── analysis-results.json
-```
-
+Ainda assim, este estudo fornece evidências quantitativas relevantes para apoiar decisões sobre a adoção de APIs REST ou GraphQL.
